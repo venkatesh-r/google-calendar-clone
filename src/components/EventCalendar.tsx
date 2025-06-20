@@ -7,13 +7,15 @@ import {
   isToday,
   addMonths,
   subMonths,
+  isSameDay,
+  parse,
 } from "date-fns";
 import clsx from "clsx";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { useState } from "react";
 import WeekHeader from "./WeekHeader";
+import CalendarHeader from "./CalendarHeader";
 
-const EventCalendar = () => {
+const EventCalendar: React.FC = ({ events, onViewChange }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
   const handleToday = () => {
@@ -40,42 +42,45 @@ const EventCalendar = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div>
-        <div className="flex">
-          <div>
-            <button onClick={handleToday}>Today</button>
-            <button>
-              <FaAngleLeft onClick={handlePrevMonth} />
-            </button>
-            <button onClick={handleNextMonth}>
-              <FaAngleRight />
-            </button>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-bold mb-10">
-              {format(currentDate, "MMMM yyyy")}
-            </h2>
-          </div>
-        </div>
-      </div>
+      <CalendarHeader
+        currentDate={currentDate}
+        today={handleToday}
+        next={handleNextMonth}
+        prev={handlePrevMonth}
+        view="month"
+        onViewChange={onViewChange}
+      />
       <WeekHeader />
       <div className="grid grid-cols-7 gap-2">
         {Array.from({ length: startingDayIndex }).map((_, index) => {
           return <div key={`empty-${index}`}></div>;
         })}
         {daysInMonth.map((day, index) => {
+          const dayEvents = events.filter((event) =>
+            isSameDay(
+              day,
+              parse(event.start, "EEEE, MMM dd, yyyy hh:mm a", new Date())
+            )
+          );
+          console.log(dayEvents);
           return (
             <div
               className={clsx(
                 "border border-gray-200 rounded-md p-10 align-top h-30",
                 {
-                  "bg-blue-800 text-white": isToday(day),
+                  "p-3 bg-blue-800 rounded-full w-3 h-3 text-white":
+                    isToday(day),
                 }
               )}
               key={index}
             >
               {format(day, "d")}
+              {dayEvents.map((event, id) => (
+                <div key={id}>
+                  {format(event.start, "hh:mm")}
+                  {event.title}
+                </div>
+              ))}
             </div>
           );
         })}

@@ -1,12 +1,10 @@
 import "./App.css";
-import EventCalendar from "./components/EventCalendar";
-import WeekCalendar from "./components/WeekCalendar";
+import Home from "./Page/Home";
 
 function App() {
   return (
     <>
-      <EventCalendar />
-      <WeekCalendar />
+      <Home />
     </>
   );
 }

@@ -1,38 +1,67 @@
-import { format } from "date-fns";
+import {
+  eachDayOfInterval,
+  endOfWeek,
+  format,
+  startOfWeek,
+  isToday,
+  addWeeks,
+  subWeeks,
+} from "date-fns";
 import WeekHeader from "./WeekHeader";
+import { useState } from "react";
+import clsx from "clsx";
+import CalendarHeader from "./CalendarHeader.js";
+import { TIMING } from "../utils/constants.js";
 
-const timing = [
-  "1:00 AM",
-  "2:00 AM",
-  "3:00 AM",
-  "4:00 AM",
-  "5:00 AM",
-  "6:00 AM",
-  "7:00 AM",
-  "8:00 AM",
-  "9:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "1:00 PM",
-  "2:00 PM",
-  "3:00 PM",
-  "4:00 PM",
-  "5:00 PM",
-  "6:00 PM",
-  "7:00 PM",
-  "8:00 PM",
-  "9:00 PM",
-  "10:00 PM",
-  "11:00 PM",
-];
+const WeekCalendar = ({ onViewChange }) => {
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const start = startOfWeek(currentDate, { weekStartsOn: 0 });
+  const end = endOfWeek(currentDate, { weekStartsOn: 0 });
 
-const WeekCalendar = () => {
+  const weekdays = eachDayOfInterval({ start, end });
+
+  const handleToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  const handlenextWeek = () => {
+    setCurrentDate((prev) => addWeeks(prev, 1));
+  };
+
+  const handlePrevWeek = () => {
+    setCurrentDate((prev) => subWeeks(prev, 1));
+  };
+
   return (
     <>
+      <div>
+        <CalendarHeader
+          currentDate={currentDate}
+          today={handleToday}
+          next={handlenextWeek}
+          prev={handlePrevWeek}
+          view="week"
+          onViewChange={onViewChange}
+        />
+      </div>
       <WeekHeader />
+      <div className="grid grid-cols-7 gap-2">
+        {weekdays.map((day) => {
+          return (
+            <div
+              className={clsx("align-top my-2", {
+                "bg-blue-800 w-8 h-8 content-center ml-[41%] rounded-full text-white align-middle":
+                  isToday(day),
+              })}
+            >
+              {format(day, "dd")}
+            </div>
+          );
+        })}
+      </div>
+
       <div className="grid grid-rows-12 text-left">
-        {timing.map((time) => {
+        {TIMING.map((time) => {
           return (
             <div className="border-b-1 p-2 border-gray-200" key={time}>
               {time}
