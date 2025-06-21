@@ -15,7 +15,6 @@ import { useState } from "react";
 import WeekHeader from "./WeekHeader";
 import CalendarHeader from "./CalendarHeader";
 import { IoCloseOutline } from "react-icons/io5";
-import { useTheme } from "../utils/theme-context.jsx";
 
 interface EventProps {
   title: string;
