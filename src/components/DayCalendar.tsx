@@ -3,7 +3,7 @@ import { TIMING } from "../utils/constants.js";
 import { format, subDays, addDays } from "date-fns";
 import CalendarHeader from "./CalendarHeader.js";
 
-const DayCalendar = ({ onViewChange }) => {
+const DayCalendar = ({ events, onViewChange, setEvents }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
   const handleToday = () => {
@@ -19,7 +19,7 @@ const DayCalendar = ({ onViewChange }) => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto p-2">
       <CalendarHeader
         currentDate={currentDate}
         today={handleToday}

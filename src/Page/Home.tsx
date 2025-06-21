@@ -2,44 +2,53 @@ import { useState } from "react";
 import EventCalendar from "../components/EventCalendar";
 import WeekCalendar from "../components/WeekCalendar";
 import DayCalendar from "../components/DayCalendar";
-import EventPicker from "../components/EventPicker";
-import CalendarHeader from "../components/CalendarHeader";
+import { EventData } from "../data/EventData.js";
+import { useTheme } from "../utils/theme-context.jsx";
 
 const Home = () => {
-  const events = [
-    {
-      end: "Friday, Jun 20, 2025 09:47 PM",
-      start: "Friday, Jun 20, 2025 08:47 PM",
-      title: "Team meeting",
-    },
-    {
-      end: "Tuesday, Jun 10, 2025 09:00 AM",
-      start: "Tuesday, Jun 10, 2025 10:00 PM",
-      title: "sprint meeting",
-    },
-    {
-      end: "Tuesday, Jun 25, 2025 03:00 PM",
-      start: "Tuesday, Jun 25, 2025 04:00 PM",
-      title: "sprint meeting",
-    },
-  ];
-
+  const [events, setEvents] = useState(EventData);
   const [viewday, setViewday] = useState("month");
+  const { theme, toggleTheme } = useTheme();
 
   const handleViewChange = (val: string) => {
     setViewday(val);
-    console.log(val);
   };
 
   return (
     <div>
+      <h1 className="text-5xl mb-5">Calendar</h1>
+      <div className="relative right-0">
+        <label className="absolute ml-5 top-[-40px] right-0 text-lg">
+          Change theme
+          <input
+            type="checkbox"
+            onChange={toggleTheme}
+            checked={theme === "dark"}
+            className="absolute ml-2 top-2"
+          />
+        </label>
+      </div>
       {viewday === "month" && (
-        <EventCalendar events={events} onViewChange={handleViewChange} />
+        <EventCalendar
+          events={events}
+          setEvents={setEvents}
+          onViewChange={handleViewChange}
+        />
       )}
-      {viewday === "week" && <WeekCalendar onViewChange={handleViewChange} />}
-      {viewday === "day" && <DayCalendar onViewChange={handleViewChange} />}
-
-      <EventPicker />
+      {viewday === "week" && (
+        <WeekCalendar
+          events={events}
+          setEvents={setEvents}
+          onViewChange={handleViewChange}
+        />
+      )}
+      {viewday === "day" && (
+        <DayCalendar
+          events={events}
+          setEvents={setEvents}
+          onViewChange={handleViewChange}
+        />
+      )}
     </div>
   );
 };

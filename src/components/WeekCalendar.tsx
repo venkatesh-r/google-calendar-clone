@@ -13,7 +13,7 @@ import clsx from "clsx";
 import CalendarHeader from "./CalendarHeader.js";
 import { TIMING } from "../utils/constants.js";
 
-const WeekCalendar = ({ onViewChange }) => {
+const WeekCalendar = ({ events, onViewChange, setEvents }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const start = startOfWeek(currentDate, { weekStartsOn: 0 });
   const end = endOfWeek(currentDate, { weekStartsOn: 0 });
@@ -34,7 +34,7 @@ const WeekCalendar = ({ onViewChange }) => {
 
   return (
     <>
-      <div>
+      <div className="container mx-auto p-2">
         <CalendarHeader
           currentDate={currentDate}
           today={handleToday}
